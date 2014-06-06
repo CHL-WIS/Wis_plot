@@ -1,5 +1,33 @@
 function data = conc_mat_files(fdir,varargin)
-
+%
+%     data = conc_mat_files
+%        created by TJ Hesser  05/16/14
+%
+%     gathers WIS data sets by project or storm for analysis 
+%
+%  INPUTS:
+%     fdir        STRING     : directory where data is stored
+%                                could be project directory down to level
+%                                directory
+%     project     OPT STR    : name of project directory (ie. NACCS)
+%     storm       OPT STR    : name of storm or year-mon (ie. ST0001 or
+%                                1983-01)
+%     level       OPT STR    : name of level (ie. level1)
+%     stormid     OPT STR    : Flag for identifying specific storms while 
+%                                searching directory (ie. TP* for Tropical
+%
+%  OUTPUTS:
+%     data        STRUCT  
+%       buoy      STRUCT     : buoy data
+%         total   array      : array of buoy data for total inquiry
+%         var     array      : arrays for each strom in project
+%
+%       model     STRUCT     : model data
+%         total   arrray     : array of model data for total inquiry
+%         var     array      : array of model data for project specific
+%                                 output
+%
+% -------------------------------------------------------------------------
 p = inputParser;
 p.addRequired('fdir');
 p.addOptional('project','');
@@ -20,8 +48,12 @@ else
 end
 
 if ~strcmp(project,'')
-    if ~isempty(stormid)
-        listp = dir([fdir,slash,stormid,'*']);
+    if ~isempty(storm)
+        listp = dir([fdir,slash,storm]);
+        pdir = size(listp,1);
+        filep = listp;
+    elseif ~isempty(stormid)
+        listp = dir([fdir,slash,stormid]);
         pdir = size(listp,1);
         filep = listp;
     else
@@ -53,19 +85,25 @@ end
 
 
 for ip = 1:pdir
-    %fdir2 = fdir;
     if ~isempty(filep)
         fdirp = [fdir,slash,filep(ip).name];
+        fpname = filep(ip).name;
+        fpname = strrep(fpname,'-','_');
     else
         fdirp = fdir;
     end
-    
+
     for id = 1:idir
         if ~isempty(filed)
             fdir1 = [fdirp,slash,filed(id).name];
+            if ~exist('sttname','var')
+                fdname = filed(id).name;
+                fdname = strrep(fdname,'-','_');
+            end
         else
             fdir1 = fdirp;
         end
+
         fd = dir([fdir1,slash,'timepair*.mat']);
         for zd = 1:length(fd)
             load([fdir1,slash,fd(zd).name]);
@@ -76,11 +114,33 @@ for ip = 1:pdir
                 data.buoy.total = [data.buoy.total;AB];
                 data.model.total = [data.model.total;AM];
             end
+            if exist('fpname','var')
+                if ~myIsField(data.buoy,fpname)
+                    data.buoy.(fpname).total = AB;
+                    data.model.(fpname).total = AM;
+                else
+                    data.buoy.(fpname).total = [data.buoy.(fpname).total; ...
+                        AB];
+                    data.model.(fpname).total = [data.model.(fpname).total; ...
+                        AM];
+                end
+            elseif exist('fdname','var')
+                if ~myIsField(data.buoy,fdname)
+                    data.buoy.(fdname).total = AB;
+                    data.model.(fdname).total = AM;
+                else
+                    data.buoy.(fdname).total = [data.buoy.(fdname).total; ...
+                        AB];
+                    data.model.(fdname).total = [data.model.(fdname).total; ...
+                        AM];
+                end                
+            end
             %stname = ['ST',fd(zd).name(end-8:end-4)];
             %data.buoy.(stname) = AB;
             %data.model.(stname) = AM;
         end
     end
+   % fprintf(1,'File size is %f\n',length(data.buoy.(sttname).total))
 end
 if ~exist('data','var')
     error('The data needed does not exist for analysis')

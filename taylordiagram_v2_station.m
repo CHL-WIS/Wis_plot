@@ -56,6 +56,11 @@ elseif splt > 0
     subplot(splt)
 end
 
+if isunix
+    slash = '/';
+else
+    slash = '\';
+end
 
 %set(0,'ShowHiddenHandles','on')
 %delete(get(0,'Children'))
@@ -79,19 +84,24 @@ counter=0;
 %     folhleglabel{k}=foldat;
 %files=dir(fullfile(inpath,'timepair*.mat'));
 f1 = fieldnames(data.buoy);
-files = f1(1:end);
-folcmap = hsv(numel(files));
-%folcmap(1,1:3) = [0 0 0];
+files = flipud(f1(1:end));
+folcmap = hsv(numel(files(1:end-1)));
+folcmap(end+1,1:3) = [0 0 0];
 %folcmap(2:length(folcmap2)+1,:) = folcmap2;
-for kk=1:1%numel(files) %Looping over *.timepair files in the directory
+for kk=1:numel(files) %Looping over *.timepair files in the directory
     tfile=files{kk};
     Npan(kk) = 1;
     foldat = files{kk};
     folhleglabel{kk} = foldat;
     %        data=load(fullfile(inpath,foldat,tfile));
     %        data = load(fullfile(inpath,tfile));
-    buoy=data.buoy.(tfile)(:,4);
-    model=data.model.(tfile)(:,4);
+    if isstruct(data.buoy.(tfile))
+        buoy=data.buoy.(tfile).total(:,4);
+        model=data.model.(tfile).total(:,4);
+    else
+        buoy=data.buoy.(tfile)(:,4);
+        model=data.model.(tfile)(:,4);
+    end
     ind=find(tfile=='.');
     bname=tfile(ind-5:ind-1);
     
@@ -151,7 +161,7 @@ end
 
 clear dind
 
-dind=find(inpath=='/');
+dind=find(inpath==slash);
 folsimname=inpath(dind(end)+1:end);
 
 %Plot individual points for each grid
@@ -218,11 +228,13 @@ end
 [m,n]=size(rho);
 plot(rho(1,1)*cos(theta(1,1)),rho(1,1)*sin(theta(1,1)),'Marker','x','Color','k','MarkerSize',8,'LineWidth',2);
 pp=zeros(1,n);
-for jj=1:n
+for jj=1:n-1
     pp(jj)=plot(rho(m,jj)*cos(theta(m,jj)),rho(m,jj)*sin(theta(m,jj)),'Marker','.','Color',color(jj,:),'MarkerSize',15);
 end
-hleg=legend(pp(cutoff),folhleglabel,'FontSize',6,'Location','EastOutside');
-set(hleg,'Box','off','Color','none')
+pp(n)=plot(rho(m,n)*cos(theta(m,n)),rho(m,n)*sin(theta(m,n)),'Marker','.','Color',color(n,:),'MarkerSize',20);
+
+%hleg=legend(pp(cutoff),folhleglabel,'FontSize',6,'Location','EastOutside');
+%set(hleg,'Box','off','Color','none')
 %titl1=(simname);
 %titl2=['Stations Processed: ',num2str(n)];
 %c=clock;
