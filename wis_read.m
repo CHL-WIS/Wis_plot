@@ -223,7 +223,7 @@ close all
 %% -----------------------------------------------------------------
 % Plot single stats for each level in a run
 % ------------------------------------------------------------------
-data = conc_mat_files(dirname);
+%data = conc_mat_files(dirname);
 
 %or_val_set(filename1(1:4),filename1(5:6));
 %cd('C:/IMEDS 3.1/src/process');
