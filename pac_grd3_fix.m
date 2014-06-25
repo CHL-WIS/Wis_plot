@@ -14,8 +14,8 @@ specform3 = ['%6.2f%6.2f%6.2f%6.2f%6.2f%5.0f.%5.0f.\n'];
 
 
 dirnew = '/home/thesser1/Pacific/Model/';
-dirpl = '/mnt/CHL_WIS_1/Pacific/Production/Model/';
-dirold = '/mnt/CHL_WIS_1/Pacific/Production/Model_Old/';
+dirpl = '/mnt/CHL_WIS_2/Pacific/Production/Model/';
+dirold = '/mnt/CHL_WIS_2/Pacific/Production/Model_Old/';
 
 if ~exist([dirnew,yearmon],'dir')
     mkdir([dirnew,yearmon]);
