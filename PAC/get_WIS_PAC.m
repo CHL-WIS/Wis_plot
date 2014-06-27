@@ -14,7 +14,7 @@ storm = p.Results.storm;
 
 %get_file = ['X:\Atlantic\Evaluation\WW3\Model\',outfile(end-6:end),'\'];
 %get_file = ['/mnt/CHL_WIS_2/Pacific/Production/Model_Old/',year,'-',mon,'/'];
-get_file = ['/mnt/CHL_WIS_2/Pacific/Eval_2014/PAC_cali/',year,'-',mon,'/'];
+get_file = ['/mnt/CHL_WIS_2/Pacific/Eval_2014/PAC_haw3/model/',year,'-',mon,'/'];
 if ~exist(outfile,'dir')
     mkdir(outfile);
 end
@@ -24,10 +24,8 @@ cd(outfile);
 %loc{3} = [outfile,'/grd3'];
 %loc{4} = [outfile,'/grd4'];
 loc{1} = ['basin_l1'];
-%loc{2} = ['hawaii_l2'];
-loc{2} = ['westc_l2'];
-loc{3} = ['westc_l3'];
-loc{4} = ['cali_l4'];
+loc{2} = ['hawaii_l2'];
+loc{3} = ['hawaii_l3'];
 
 for zz = 1:length(loc)
     floc = [outfile,'/',loc{zz}]
