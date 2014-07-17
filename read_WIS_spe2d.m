@@ -1,4 +1,4 @@
-function [fileout] = read_WAM_spe2d(fname)
+function [fileout] = read_WIS_spe2d(fname)
 fid = fopen(fname,'r');
 nn = 0;
 %station = '46001';

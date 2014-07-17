@@ -24,8 +24,11 @@ cd(outfile);
 %loc{3} = [outfile,'/grd3'];
 %loc{4} = [outfile,'/grd4'];
 loc{1} = ['basin_l1'];
-loc{2} = ['hawaii_l2'];
-loc{3} = ['hawaii_l3'];
+loc{2} = ['westc_l2'];
+loc{3} = ['westc_l3'];
+loc{4} = ['cali_l4'];
+loc{5} = ['hawaii_l2'];
+loc{6} = ['hawaii_l3'];
 
 for zz = 1:length(loc)
     floc = [outfile,'/',loc{zz}]
@@ -35,14 +38,14 @@ for zz = 1:length(loc)
     cd (floc)
 %    ii = strfind(loc{zz},'grd');
 %    levn = loc{zz}(ii+3:end);
-    copyfile([get_file,loc{zz},'/*', ...
-        loc{zz},'-MMt.tgz'],'.');
-    fnamest = [get_file,loc{zz},'/*', ...
-            loc{zz},'-ST-onlns.tgz'];
-    blah = dir(fnamest);
-    if ~isempty(blah)
-        copyfile(fnamest,'.');
-    end
+    %copyfile([get_file,loc{zz},'/*', ...
+    %    loc{zz},'-MMt.tgz'],'.');
+    %fnamest = [get_file,loc{zz},'/*', ...
+    %        loc{zz},'-ST-onlns.tgz'];
+    %blah = dir(fnamest);
+    %if ~isempty(blah)
+    %    copyfile(fnamest,'.');
+    %end
     wis_read('PAC','/',0,'year',year,'mon',mon)
     
 end
