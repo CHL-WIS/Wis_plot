@@ -27,61 +27,15 @@ unts = p.Results.units;
 
 eval([bas,'_info']);
 storm = bas;
-% finds name of MMt.tgz file
-% files1 = dir('*MMt.tgz');
-% if size(files1,1) == 0
-%     files1 = dir('*MMd.tgz');
-% end
-% filename1 = getfield(files1,'name');
-% % untar MMt.tgz file
-% untar(filename1);
-% % read in Max-mean file (file name needs to change depending on model)
-% ffn = dir('Max*.dat');
-% fid = fopen(ffn.name);
-% data = textscan(fid,'%f%f%f%f%f%f%f%f',1);
-% fclose(fid);
-% time1 = num2str(data{1});time2 = num2str(data{2});
-% % identify lat and lon coordinates from header
-% if ~isempty(strfind(ffn.name,'ww3'))
-%     lonw = data{3};
-%     lone = data{4};
-%     nlon = data{5};
-%     lats = data{6};
-%     latn = data{7};
-%     nlat = data{8};
-%     res = (latn - lats)/(nlat-1);
-% else
-%     res = data{3};
-%     lats = data{5};
-%     latn = data{6};
-%     lonw = data{7};
-%     lone = data{8};
-%     nlon = (lone - lonw)/res + 1;
-%     nlat = (latn - lats)/res + 1;
-% end
-% % grab year month
-% year1 = str2double(time1(1:4));
-% mon1 = str2double(time1(5:6));
-% day1 = str2double(time1(7:8));
-% year2 = str2double(time2(1:4));
-% mon2 = str2double(time2(5:6));
-% day2 = str2double(time2(7:8));
-% date = [year1 mon1 day1 year2 mon2 day2];
-% % evaluation names taken from file name
-% % track = year-mon
-% %track = [filename1(1:4),'-',filename1(5:6)];
+[date, res, type] = get_date;
+
 if ~strcmp(stormn,'blah')
     track = stormn;
 else
     track = [year,'-',mon];
 end
 bbop = pwd;
-%ii = strfind(bbop,gridid);
-%if ~isempty(ii)
-%level = bbop(ii:end);
-%else
-%    level = 'LEVEL1';
-%end
+
 ii = regexp(bbop,slash);
 level = bbop(ii(end)+1:end);
     % level = year-mon-level
@@ -90,26 +44,24 @@ level = bbop(ii(end)+1:end);
 % call contour plot of max mean
 %
 % -------------------------------------------------------------------
-wis_cont_h5(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
+if strcmp(type,'*.h5')
+    wis_cont_h5(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
+else
+    wis_cont(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
+end
 % -------------------------------------------------------------------
 loc = pwd;
 
-% go out to raid and grab any validation data sets
-%timeseries_get(date,level, ...
-%   localdir,plotloc,rdir,storm)
-
-%year = str2num(filename1(1:4));
-%mon = str2num(filename1(5:6));
 % load in plot information from -plot.mat file
 ff = [plotloc,slash,bas,'-',level,'-plot.mat'];
 if ~exist(ff,'file')
     return
 end
 load(ff);
-%file = dir('*point.tgz');
-%if size(file,1) == 0
+file = dir('*point.tgz');
+if size(file,1) == 0
     file = dir('*ST-onlns.tgz');
-%end
+end
 if size(file,1) == 0
    file = dir('*STNS_*_onlns.tgz');
 end
@@ -126,35 +78,42 @@ if size(file,1) == 0
     return
 end
 untar(file.name)
-fname = dir('*.onlns');
-
+fname = dir('ST*.h5');
+if size(fname,1) == 0
+    fname = dir('*.onlns');
+end
 dirname = [pwd,'/Validation',slash];
 if ~exist(dirname,'dir')
     mkdir(dirname);
 end
-movefile('*.onlns',dirname);
+
+movefile(type,dirname);
 cd(dirname)
 
-load([plotloc,slash,bas,'-',level,'-buoy.mat']);
-stations = buoy(:,3);
+buoyfile = [plotloc,slash,bas,'-',level,'-buoy.mat'];
+if exist(buoyfile,'file')
+    load([plotloc,slash,bas,'-',level,'-buoy.mat']);
+    stations = buoy(:,3);
+else
+    fdd = dir([bdir,'Buoy_Locs',slash,level,slash,'*.locs']);
+    for ii = 1:length(fdd)
+        stations(ii,1) = str2num(fdd(ii).name(2:6));
+    end
+end
 
 % identify validation data sets 
-%stats = dir('n4*.onlns');
 nn = 0;
 locb = zeros(size(compend));
 loci = locb;
 for zz = 1:length(stations)
     % identify name of buoy
-    %buoyc = stats(zz).name(2:6);
     buoyc = num2str(stations(zz));
     [buoy,flag] = timeseries_read(date,rdir,buoyc);
     if flag == 0
         continue
     end
-    % load in buoy data
-    %buoy = read_NDBC_onlns(stats(zz).name);
     % search directory for location file added 2013/05/06 
-    fbdir = [bdir,level];
+    fbdir = [bdir,'Buoy_Locs',slash,level];
     if ~exist(fbdir,'dir');
         fbdir = bdir;
     end
@@ -180,7 +139,11 @@ for zz = 1:length(stations)
         buoycw = buoyc;
     end
     % load in model results for buoy
-    wis = read_WIS_onlns(['ST',buoycw,'.onlns']);
+    if strcmp(type,'*.h5')
+        wis = read_WIS_h5_stat(['ST',buoycw,'.h5']);
+    else
+        wis = read_WIS_onlns(['ST',buoycw,'.onlns']);
+    end
     if ~isstruct(wis)
         continue
     end
@@ -203,8 +166,8 @@ for zz = 1:length(stations)
             nn = nn + 1;
             loci(ii) = 1;
             locb(ii) = nn;
-            comp(nn) = struct('btime',buoy.time(imb),'bwvht',buoy.wvht(imb), ...
-            'time',wis.time,'mwvht',wis.wvht,'mlat',buoy.lat,'mlon',buoy.lon);
+            comp(nn) = struct('btime',buoy.time(imb),'bwvht',buoy.wavhs(imb), ...
+            'time',wis.time,'mwvht',wis.wavhs,'mlat',buoy.lat,'mlon',buoy.lon);
         end
     end
 end

@@ -1,5 +1,6 @@
 function [titchar2,saven,titchar3] = PAC_names(buoyc,buoy,model,track,level,res)
 titcharpt1=['Pacific Hindcast Study '];%[OWI Winds]   '];
+track = strrep(level,'_','-');
 titcharpt125=['  GRID ',level,'  OWI Winds'];
 titcharpt15=['WaveWatch III ','ST4',' (Res = ',num2str(res),'\circ)  '];
 titcharpt17=['   [ ',num2str(model.lon),'\circ / ',num2str(model.lat),'\circ ]'];

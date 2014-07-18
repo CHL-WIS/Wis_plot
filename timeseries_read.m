@@ -104,10 +104,10 @@ end
 
 for jj = 1:length(bb)
     buoy.time = [buoy.time;bb(jj).time];
-    buoy.wvht = [buoy.wvht;bb(jj).wvht];
-    buoy.tpp = [buoy.tpp;bb(jj).tpp];
-    buoy.tm1 = [buoy.tm1;bb(jj).tm1];
-    buoy.wavd = [buoy.wavd;bb(jj).wavd];
-    buoy.wspd = [buoy.wspd;bb(jj).wspd];
-    buoy.wdir = [buoy.wdir;bb(jj).wdir];
+    buoy.wavhs = [buoy.wavhs;bb(jj).wavhs];
+    buoy.wavtpp = [buoy.wavtpp;bb(jj).wavtpp];
+    buoy.wavtm1 = [buoy.wavtm1;bb(jj).wavtm1];
+    buoy.wavdir = [buoy.wavdir;bb(jj).wavdir];
+    buoy.wndspd = [buoy.wndspd;bb(jj).wndspd];
+    buoy.wnddir = [buoy.wnddir;bb(jj).wnddir];
 end

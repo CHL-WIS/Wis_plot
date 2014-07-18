@@ -16,27 +16,27 @@ function stats_calc(buoyc,buoy,model,modelv,saven,simname,unt)
 %     .time        Matlab time
 %     .lon         Longitude
 %     .lat         Latitude
-%     .wspd        Wind Speed
-%     .wdir        Wind Direction
-%     .wvht        Wave Height
-%     .tpp         Peak Period
-%     .tm1         Mean Period
-%     .wavd        Wave Direction
+%     .wndspd        Wind Speed
+%     .wnddir        Wind Direction
+%     .wavhs        Wave Height
+%     .wavtpp         Peak Period
+%     .wavtm1         Mean Period
+%     .wavdir        Wave Direction
 % -------------------------------------------------------------------------
 
 tol=11;
 if strcmp(unt,'ft')
-    buoy.wvht = buoy.wvht * 3.281;
-    buoy.wspd = buoy.wspd * 2.23694;
-    model.wvht = model.wvht .* 3.281;
-    model.wspd = model.wspd .* 2.23694;
+    buoy.wavhs = buoy.wavhs * 3.281;
+    buoy.wndspd = buoy.wndspd * 2.23694;
+    model.wavhs = model.wavhs .* 3.281;
+    model.wndspd = model.wndspd .* 2.23694;
     names = {'H_{mo} (ft)';'T_{p} (s)';'T_{m} (s)';'WS (mi/hr)';'WD (deg)'};
 else
     names = {'H_{mo} (m)';'T_{p} (s)';'T_{m} (s)';'WS (m/s)';'WD (deg)'};
 end
-ii = buoy.wvht >= 0 & buoy.time >= model.time(1) & ...
+ii = buoy.wavhs >= 0 & buoy.time >= model.time(1) & ...
         buoy.time <= model.time(end);
-if isempty(buoy.wvht(ii))
+if isempty(buoy.wavhs(ii))
     return
 end
 %
@@ -51,10 +51,10 @@ else
     [kkM,kkB]=mpair(model.time,buoy.time,tol);
 end
 
-AB=[buoy.time(kkB),buoy.wspd(kkB),buoy.wdir(kkB),buoy.wvht(kkB), ...
-    buoy.tpp(kkB),buoy.tm1(kkB),buoy.wavd(kkB)];
-AM=[model.time(kkM),model.wspd(kkM),model.wdir(kkM),model.wvht(kkM),...
-    model.tpp(kkM),model.tm1(kkM),model.wavd(kkM)];
+AB=[buoy.time(kkB),buoy.wndspd(kkB),buoy.wnddir(kkB),buoy.wavhs(kkB), ...
+    buoy.wavtpp(kkB),buoy.wavtm1(kkB),buoy.wavdir(kkB)];
+AM=[model.time(kkM),model.wndspd(kkM),model.wnddir(kkM),model.wavhs(kkM),...
+    model.wavtpp(kkM),model.wavtm1(kkM),model.wavdir(kkM)];
 
 saveout = ['timepair-',saven,'-',buoyc];
 save(saveout,'AB','AM');
@@ -82,7 +82,7 @@ for ii = 1:3
     [qqB,qqM]=QQ_proc(AB(vars{rr(ii)-1},rr(ii)),AM(vars{rr(ii)-1},rr(ii)));
     orient('tall')
     subplot(3,2,2*ii-1)
-    maxv = max(max(AB(vars{rr(ii)-1},rr(ii))),max(AM(vars{rr(ii)-1},rr(ii))));
+    maxv = double(max(max(AB(vars{rr(ii)-1},rr(ii))),max(AM(vars{rr(ii)-1},rr(ii)))));
     plot(AB(vars{rr(ii)-1},rr(ii)),AM(vars{rr(ii)-1},rr(ii)),'r.', ...
         [0 maxv],[0 maxv],'b',[0 se(ii+1,9)*maxv], ...
         [0 se(ii+1,9)*maxv],'g--')
@@ -130,7 +130,7 @@ orient('tall')
 if ~isempty(iwsg)
     [qqB,qqM]=QQ_proc(AB(iwsg,2),AM(iwsg,2));
     subplot(3,2,1)
-    wsmax = max(max(AB(iwsg,2)),max(AM(iwsg,2)));
+    wsmax = double(max(max(AB(iwsg,2)),max(AM(iwsg,2))));
     plot(AB(iwsg,2),AM(iwsg,2),'r.',[0 wsmax],[0 wsmax],'b',...
         [0 se(1,9)*wsmax],[0 se(1,9)*wsmax],'g--')
     grid

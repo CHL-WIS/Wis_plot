@@ -15,15 +15,15 @@ function timeplot_WIS(buoyc,buoy,model,coord,tit1,saven,unt,track,fillm)
 %    fillm           NUMERIC   : fill plots for Great Lakes no=0, yes=1
 %
 %    Both buoy and model have the same structure with:
-%     .time        Matlab time
-%     .lon         Longitude
-%     .lat         Latitude
-%     .wspd        Wind Speed
-%     .wdir        Wind Direction
-%     .wvht        Wave Height
-%     .tpp         Peak Period
-%     .tm1         Mean Period
-%     .wavd        Wave Direction
+%     .time          Matlab time
+%     .lon           Longitude
+%     .lat           Latitude
+%     .wndspd        Wind Speed
+%     .wnddir        Wind Direction
+%     .wavhs         Wave Height
+%     .wavtpp        Peak Period
+%     .wavtm1        Mean Period
+%     .wavdir        Wave Direction
 % -------------------------------------------------------------------------
 shr_x(1,1) = coord(1);
 shr_x(2,1) = coord(2);
@@ -39,10 +39,10 @@ shr_y(5,1) = coord(4);
 
 idnum = 6;
 if strcmp(unt,'ft')
-    buoy.wvht = buoy.wvht .* 3.281;
-    buoy.wspd = buoy.wspd * 2.23694;
+    buoy.wavhs = buoy.wavhs .* 3.281;
+    buoy.wndspd = buoy.wndspd * 2.23694;
     model.wtlv = model.wtlv .* 3.281;
-    model.wspd = model.wspd .* 2.23694;
+    model.wndspd = model.wndspd .* 2.23694;
     unit = {'ft';'s';'s';'deg';'mi/hr';'deg'};
 else
     unit = {'m';'s';'s';'deg';'m/s';'deg'};
@@ -94,14 +94,14 @@ end
 hold off
 
 pt(1) = subplot(8,3,[7 9]);
-ii = buoy.wvht ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wavhs ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end); 
-if isempty(buoy.wvht(ii))
+if isempty(buoy.wavhs(ii))
     close(f);
     return
 end
 try
-    plot(buoy.time(ii),buoy.wvht(ii),'r.',model.time,model.wvht,'b', ...
+    plot(buoy.time(ii),buoy.wavhs(ii),'r.',model.time,model.wavhs,'b', ...
     'Markersize',8,'linewidth',1);
 catch
     1;
@@ -109,7 +109,7 @@ end
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
 ylabel(['H_{s} (',unit{1},')'],'fontweight','bold');
-set_WIS_ytick(0,max(max(buoy.wvht(ii)),max(model.wvht)));
+set_WIS_ytick(0,max(max(buoy.wavhs(ii)),max(model.wavhs)));
 hleg = legend('Buoy','Model');
 yimit = get(gca,'ylim');
 text(min(model.time),yimit(2)*3.0,tit1,'fontweight','bold');
@@ -118,37 +118,37 @@ po=[0.3 0.74 0.08 0.03];
 set(hleg,'position',po);
 
 pt(2) = subplot(8,3,[10 12]);
-ii = buoy.tpp ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wavtpp ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end) ;
-plot(buoy.time(ii),buoy.tpp(ii),'r.',model.time,model.tpp,'b', ...
+plot(buoy.time(ii),buoy.wavtpp(ii),'r.',model.time,model.wavtpp,'b', ...
     'MarkerSize',8,'LineWidth',1);
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
 ylabel('T_{p} (s)','fontweight','bold');
-if isempty(buoy.tpp(ii))
-   set_WIS_ytick(0,max(model.tpp))
+if isempty(buoy.wavtpp(ii))
+   set_WIS_ytick(0,max(model.wavtpp))
 else
-   set_WIS_ytick(0,max(max(buoy.tpp(ii)),max(model.tpp)));
+   set_WIS_ytick(0,max(max(buoy.wavtpp(ii)),max(model.wavtpp)));
 end
 
 pt(3) = subplot(8,3,[13 15]);
-ii = buoy.tm1 ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wavtm1 ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end);
-plot(buoy.time(ii),buoy.tm1(ii),'r.',model.time,model.tm1,'b', ...
+plot(buoy.time(ii),buoy.wavtm1(ii),'r.',model.time,model.wavtm1,'b', ...
     'MarkerSize',8,'LineWidth',1);
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
 ylabel('T_{m} (s)','fontweight','bold');
-if isempty(buoy.tm1(ii))
-   set_WIS_ytick(0,max(model.tm1))
+if isempty(buoy.wavtm1(ii))
+   set_WIS_ytick(0,max(model.wavtm1))
 else
-   set_WIS_ytick(0,max(max(buoy.tm1(ii)),max(model.tm1)));
+   set_WIS_ytick(0,max(max(buoy.wavtm1(ii)),max(model.wavtm1)));
 end
 
 pt(4) = subplot(8,3,[16 18]);
-ii = buoy.wavd ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wavdir ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end);
-plot(buoy.time(ii),buoy.wavd(ii),'r.',model.time,model.wavd,'b', ...
+plot(buoy.time(ii),buoy.wavdir(ii),'r.',model.time,model.wavdir,'b', ...
     'MarkerSize',8,'LineWidth',1);
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
@@ -157,23 +157,23 @@ ylabel('\theta_{wave}','fontweight','bold');
 
 
 pt(5) = subplot(8,3,[19 21]);
-ii = buoy.wspd ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wndspd ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end);
-plot(buoy.time(ii),buoy.wspd(ii),'r.',model.time,model.wspd,'b', ...
+plot(buoy.time(ii),buoy.wndspd(ii),'r.',model.time,model.wndspd,'b', ...
     'MarkerSize',8,'LineWidth',1);
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
 ylabel(['WS (',unit{5},')'],'fontweight','bold');
-if isempty(buoy.wspd(ii))
-   set_WIS_ytick(0,max(model.wspd))
+if isempty(buoy.wndspd(ii))
+   set_WIS_ytick(0,max(model.wndspd))
 else
-   set_WIS_ytick(0,max(max(buoy.wspd(ii)),max(model.wspd)));
+   set_WIS_ytick(0,max(max(buoy.wndspd(ii)),max(model.wndspd)));
 end
 
 pt(6) = subplot(8,3,[22 24]);
-ii = buoy.wdir ~= -999 & buoy.time >= model.time(1) & ...
+ii = buoy.wnddir ~= -999 & buoy.time >= model.time(1) & ...
     buoy.time <= model.time(end);
-plot(buoy.time(ii),buoy.wdir(ii),'r.',model.time,model.wdir,'b','MarkerSize',8,'LineWidth',1);
+plot(buoy.time(ii),buoy.wnddir(ii),'r.',model.time,model.wnddir,'b','MarkerSize',8,'LineWidth',1);
 grid;
 set_WIS_xtick(min(model.time),max(model.time),idnum);
 set_WIS_ytick(0,360);

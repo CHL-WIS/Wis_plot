@@ -9,6 +9,7 @@ p.addOptional('trackp',0);
 p.addOptional('iceC','000');
 parse(p,track,modelnm,plotloc,bas,varargin{:});
 
+warning('off','all')
 trackp = p.Results.trackp;
 iceC = p.Results.iceC;
 ice_cover = 0;
@@ -28,45 +29,6 @@ ii = strfind(track,'-');
 ip = ii(end);
 load([plotloc,bas,'-',track(ip+1:end),'.mat']);
 
-% open max mean file and read header information
-% fname = dir('Max*.dat');
-% fid = fopen(fname.name,'r');
-% header = textscan(fid,'%f%f%f%f%f%f%f%f',1);
-% if ~isempty(strfind(fname.name,'ww3'))
-%     time1 = header{1};
-%     time2 = header{2};
-%     xlonw = header{3};
-%     xlone = header{4};
-%     nlon = header{5};
-%     xlats = header{6};
-%     xlatn = header{7};
-%     nlat = header{8};
-%     resd = (xlatn - xlats)/(nlat-1);
-%     qq = 1:8;
-% else
-%     time1 = header{1};
-%     time2 = header{2};
-%     resd = header{3};
-%     xlats = header{5};
-%     xlatn = header{6};
-%     xlonw = header{7};
-%     xlone = header{8};
-%     %nlon = (xlone - xlonw)/resd + 1;
-%     %nlat = (xlatn - xlats)/resd + 1 ;
-%     qr = [3,5,7];
-% end
-% dats = num2str(time1);
-% yr1 = str2num(dats(1:4));mn1 = str2num(dats(5:6));    
-% dats = num2str(time2);
-% yr2 = str2num(dats(1:4));mn2 = str2num(dats(5:6));
-
-
-% xx = [xlonw:resd:xlone];
-% yy = [xlats:resd:xlatn];
-% nlon = length(xx);nlat = length(yy);
-
-
-
 varname = {'wavhs';'wavhs_wndsea';'wavhs_swell1'};
 type = {'max';'mean'};
 typelong = {'Maximum';'Mean'};
@@ -75,33 +37,7 @@ filename = {'HMOTOT';'HMOSEA';'HMOSWL'};
 varcondition = {'Total';'Wind-Sea';'Swell'};
 displ = {'H_{total}';'H_{sea}';'H_{swell'};
 units = {'m';'m';'m'};
-% fieldname{1} ='Maximum Total   Height H_{mo} ';
-% displname{1} ='H_{total}  ';
-% filename{1} ='HMOTOT';
-% fieldname{2} ='Mean Total   Height H_{mo} ';
-% displname{2} ='H_{total}  ';
-% filename{2} ='HMOTOT';
-% 
-% fieldname{3} ='Maximum Wind-Sea   Height H_{mo} ';
-% displname{3} ='H_{sea}  ';
-% filename{3} ='HMOSEA';
-% fieldname{4} ='Mean Wind-Sea   Height H_{mo} ';
-% displname{4} ='H_{sea}  ';
-% filename{4} ='HMOSEA';
-% 
-% fieldname{5} ='Maximum Swell   Height H_{mo} ';
-% displname{5} ='H_{swell} ';
-% filename{5} ='HMOSWL';
-% fieldname{6} ='Mean Swell   Height H_{mo} ';
-% displname{6} ='H_{swell} ';
-% filename{6} ='HMOSWL';
-% 
-% fieldname{7} ='Maximum Winds   Speed U_{10} ';
-% displname{7} ='U_{10} ';
-% filename{7} ='U10TOT';
-% fieldname{8} ='Mean Winds   Speed U_{10} ';
-% displname{8} ='U_{10} ';
-% filename{8} ='U10TOT';
+
 
 %read max and mean wave height information for total, windsea, and swell
 for qq = 1:length(varname)
@@ -123,8 +59,6 @@ for qq = 1:length(varname)
         titlnam1=[{titlnam1A};{titlnam1B}];
 
     
-        %f = contour_map(data.lon,data.lat,data.(type{vv}));
-        %figure(f)
         %Start plotting routine
         RANGMM = max(max(data.(type{jtype})));
         disp([titlefld1,'  ',num2str(RANGMM)]);
@@ -175,9 +109,9 @@ for qq = 1:length(varname)
             end
         end
         if data.lat(imax(1))>= 0.0
-            deg4lat = ' \circ N';
+            deg4lat = ' \circ N / ';
         else
-            deg4lat = ' \circ S';
+            deg4lat = ' \circ S / ';
         end
     
     if trackp == 1
