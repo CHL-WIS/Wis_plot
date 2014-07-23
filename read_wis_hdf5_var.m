@@ -6,9 +6,19 @@ untar(tarname.name)
 h5 = dir('*.h5');
 data.lon = double(h5read(h5.name,'/longitude'));
 data.lat = double(h5read(h5.name,'/latitude'));
+if strcmp(var,'wndspd')
+uwnd = double(h5read(h5.name,'/wnd_u'));
+uwnd_mfac = h5readatt(h5.name,'/wnd_u','Multiplication Factor');
+uwnd = uwnd*uwnd_mfac;
+vwnd = double(h5read(h5.name,'/wnd_v'));
+vwnd_mfac = h5readatt(h5.name,'/wnd_v','Multiplication Factor');
+vwnd = vwnd*vwnd_mfac;
+data.(var) = sqrt(uwnd.^2 + vwnd.^2);
+else
 data.(var) = double(h5read(h5.name,vars));
 data_mfac = h5readatt(h5.name,vars,'Multiplication Factor');
 data.(var) = data.(var)*data_mfac;
+end
 
 mask = h5read(h5.name,'/mask');
 data.max = zeros(size(mask'));

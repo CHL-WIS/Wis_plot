@@ -29,14 +29,15 @@ ii = strfind(track,'-');
 ip = ii(end);
 load([plotloc,bas,'-',track(ip+1:end),'.mat']);
 
-varname = {'wavhs';'wavhs_wndsea';'wavhs_swell1'};
+varname = {'wavhs';'wavhs_wndsea';'wavhs_swell1';'wndspd'};
 type = {'max';'mean'};
 typelong = {'Maximum';'Mean'};
-varlongname = {'Height H_{mo}';'Height H_{mo}';'Height H_{mo}'};
-filename = {'HMOTOT';'HMOSEA';'HMOSWL'};
-varcondition = {'Total';'Wind-Sea';'Swell'};
-displ = {'H_{total}';'H_{sea}';'H_{swell'};
-units = {'m';'m';'m'};
+varlongname = {'Height H_{mo}';'Height H_{mo}';'Height H_{mo}'; ...
+    'Wind Speed U_{10}'};
+filename = {'HMOTOT';'HMOSEA';'HMOSWL';'U10TOT'};
+varcondition = {'Total';'Wind-Sea';'Swell';'Total'};
+displ = {'H_{total}';'H_{sea}';'H_{swell}';'U_{10}'};
+units = {'m';'m';'m';'m/s'};
 
 
 %read max and mean wave height information for total, windsea, and swell
@@ -109,9 +110,9 @@ for qq = 1:length(varname)
             end
         end
         if data.lat(imax(1))>= 0.0
-            deg4lat = ' \circ N / ';
+            deg4lat = ' \circ N  ';
         else
-            deg4lat = ' \circ S / ';
+            deg4lat = ' \circ S  ';
         end
     
     if trackp == 1
