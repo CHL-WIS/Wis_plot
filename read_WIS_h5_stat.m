@@ -8,7 +8,7 @@ tt = double(h5read(fname,'/datetime')');
 aa.timec = intdate_2_strdate(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
 aa.time = datenum(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
 
-aa.stat = double(h5readatt(fname,'/','station'));
+aa.stat = str2double(h5readatt(fname,'/','Station'));
 aa.lat = double(h5readatt(fname,'/','Latitude'));
 aa.lon = double(h5readatt(fname,'/','Longitude'));
 aa.wndspd = double(h5read(fname,'/wndspd'));

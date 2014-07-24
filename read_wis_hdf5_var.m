@@ -6,21 +6,33 @@ untar(tarname.name)
 h5 = dir('*.h5');
 data.lon = double(h5read(h5.name,'/longitude'));
 data.lat = double(h5read(h5.name,'/latitude'));
+mask = h5read(h5.name,'/mask');
+
 if strcmp(var,'wndspd')
-uwnd = double(h5read(h5.name,'/wnd_u'));
-uwnd_mfac = h5readatt(h5.name,'/wnd_u','Multiplication Factor');
-uwnd = uwnd*uwnd_mfac;
-vwnd = double(h5read(h5.name,'/wnd_v'));
-vwnd_mfac = h5readatt(h5.name,'/wnd_v','Multiplication Factor');
-vwnd = vwnd*vwnd_mfac;
-data.(var) = sqrt(uwnd.^2 + vwnd.^2);
+    uwndfull = double(h5read(h5.name,'/wnd_u'));
+    uwnd_mfac = h5readatt(h5.name,'/wnd_u','Multiplication Factor');
+    uwnd = uwndfull*uwnd_mfac;
+    vwndfull = double(h5read(h5.name,'/wnd_v'));
+    vwnd_mfac = h5readatt(h5.name,'/wnd_v','Multiplication Factor');
+    vwnd = vwndfull*vwnd_mfac;
+    data.(var) = zeros(size(uwnd));
+    for jj = 1:length(data.lat)
+        for ii = 1:length(data.lon)
+            if mask(ii,jj) == 0 | max(uwndfull(ii,jj,:)) < -500
+                data.(var)(ii,jj,:) = -999;
+            else
+                data.(var)(ii,jj,:) = sqrt(uwnd(ii,jj,:).^2 + ...
+                    vwnd(ii,jj,:).^2);
+            end
+            
+        end
+    end
 else
-data.(var) = double(h5read(h5.name,vars));
-data_mfac = h5readatt(h5.name,vars,'Multiplication Factor');
-data.(var) = data.(var)*data_mfac;
+    data.(var) = double(h5read(h5.name,vars));
+    data_mfac = h5readatt(h5.name,vars,'Multiplication Factor');
+    data.(var) = data.(var)*data_mfac;
 end
 
-mask = h5read(h5.name,'/mask');
 data.max = zeros(size(mask'));
 data.mean = zeros(size(mask'));
 for jj = 1:length(data.lat)

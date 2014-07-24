@@ -58,7 +58,7 @@ if ~exist(ff,'file')
     return
 end
 load(ff);
-file = dir('*point.tgz');
+file = dir('*points.tgz');
 if size(file,1) == 0
     file = dir('*ST-onlns.tgz');
 end
@@ -87,7 +87,7 @@ if ~exist(dirname,'dir')
     mkdir(dirname);
 end
 
-movefile(type,dirname);
+movefile(['ST',type],dirname);
 cd(dirname)
 
 buoyfile = [plotloc,slash,bas,'-',level,'-buoy.mat'];
