@@ -7,7 +7,7 @@ else
 end
 yeardmon = [year,'-',mon];
 BASE = '/home/thesser1/Pacific/Model/';
-BASEA = '/mnt/CHL_WIS_2/Pacific/Production/';
+BASEA = '/mnt/CHL_WIS_2/Pacific/Eval_2014/';
 arcf = [BASEA,slash,'Figures',slash,yeardmon];
 out = [BASE,slash,yeardmon];
 arcm = [BASEA,slash,'Model',slash,yeardmon];
@@ -19,10 +19,12 @@ if ~exist(arcf,'dir')
     mkdir(arcf);
 end
 
-loc{1} = 'grd1';
-loc{2} = 'grd2';
-loc{3} = 'grd3';
-loc{4} = 'grd4';
+loc{1} = 'basin_l1';
+loc{2} = 'westc_l2';
+loc{3} = 'westc_l3';
+loc{4} = 'cali_l4';
+loc{5} = 'hawaii_l2';
+loc{6} = 'hawaii_l3';
 
 for zz = 1:length(loc)
     val = [out,slash,loc{zz},slash,'Validation',slash];
