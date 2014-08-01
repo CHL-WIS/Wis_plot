@@ -12,39 +12,57 @@ mon = p.Results.mon;
 storm = p.Results.storm;
 
 if isunix
-    get_file = ['/mnt/CHL_WIS_1/NACCS/Production/Model/',year,'-',mon,'/'];
+    dirf = '/mnt/CHL_WIS_1/';
     slash = '/';
 else
-    get_file = ['Z:\NACCS\Production\Model\',year,'-',mon,'\'];
+    dirf = 'Y:\';
     slash = '\';
 end
+
+% if isunix
+%     get_file = ['/mnt/CHL_WIS_1/NACCS/Production/Model/',year,'-',mon,'/'];
+%     slash = '/';
+% else
+%     get_file = ['Z:\NACCS\Production\Model\',year,'-',mon,'\'];
+%     slash = '\';
+% end
+% identifies location of files on raid (Change for specific basin)
+    if strcmp(storm,'blah')
+        get_file = [dirf,'NACCS',slash,'Production',slash,'Model' ...
+            slash,year,'-',mon,slash];
+    else
+        get_file = [dirf,'NACCS',slash,'Production',slash,'Model', ...
+            slash,storm,slash];
+    end
+
 if ~exist(outfile,'dir')
     mkdir(outfile);
 end
 cd(outfile);
-loc{1} = [outfile,'/level1'];
-loc{2} = [outfile,'/level2'];
-loc{3} = [outfile,'/level3N'];
-loc{4} = [outfile,'/level3C'];
-loc{5} = [outfile,'/level3S1'];
-loc{6} = [outfile,'/level3S2'];
+loc{1} = [outfile,'level1'];
+loc{2} = [outfile,'level2'];
+loc{3} = [outfile,'level3N'];
+loc{4} = [outfile,'level3C'];
+% loc{5} = [outfile,'/level3S1'];
+% loc{6} = [outfile,'/level3S2'];
 
-  for zz = 1:length(loc)
+    for zz = 1:length(loc)
     if ~exist(loc{zz},'dir')
         mkdir(loc{zz});
     end
     cd (loc{zz})
     ii = strfind(loc{zz},'level');
     levn = loc{zz}(ii+5:end);
-    copyfile([get_file,'level',levn,'/*MMd.tgz'],'.');
-    fnamest = [get_file,'level',levn,'/*onlns.tgz'];
+    copyfile([get_file,'level',levn,slash,'*MMd.tgz'],'.');
+    fnamest = [get_file,'level',levn,slash,'*onlns.tgz'];
     blah = dir(fnamest);
     if ~isempty(blah)
         copyfile(fnamest,'.');
     end
-    wis_read('NACCS',slash,0,'year',year,'mon',mon)
-    
+    %wis_read('NACCS',slash,0,'year',year,'mon',mon)
+    wis_read('NACCS',slash,0,'storm', ...
+        storm,'year',year,'mon',mon)
 end
-%archive_atl(year,mon);
+%archive_naccs(storm);
 %system(['rm -rf ',outfile]);
 end

@@ -2,9 +2,9 @@
 %   Level 3N had been modified from the WIS Atlantic
 %
 title1 = ['NACCS [OWI Winds]'];
-plotloc = '/home/thesser1/My_Matlab/Wis_plot/NACCS/';
-rdir = '/mnt/CHL_WIS_1/';  % Top level location of WIS raid
-localdir='/home/thesser1/NACCS/';  % Local directory of files
-bdir = '/mnt/CHL_WIS_1/NACCS/Buoy_Locs2/'; % Location for buoy_locs
+plotloc = 'C:\Users\rdchlrej\Documents\MATLAB\matlab_2011\Wis_plot\NACCS\';
+rdir = 'Z:\';  % Top level location of WIS raid
+localdir='G:\DATA\NACCS\Production\outdat2\';  % Local directory of files
+bdir = 'Z:\NACCS\Buoy_Locs2\'; % Location for buoy_locs
 modelnm = 'WAMCY451C';  % Model information
 gridid = 'level';  % Indentifier of subgrids i.e. LEVEL/level/nest/grid

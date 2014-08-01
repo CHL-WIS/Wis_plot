@@ -1,53 +1,73 @@
-function archive_sandy(year,mon)
+function archive_naccs(outfile,varargin)
+%
+p = inputParser;
+p.addRequired('outfile');
+p.addOptional('year','9999');
+p.addOptional('mon','99');
+p.addOptional('storm','blah');
+parse(p,outfile,varargin{:});
 
+year =p.Results.year;
+mon = p.Results.mon;
+storm = p.Results.storm;
+%
 if isunix
-    slash = '/';
-else
     slash = '\';
+    BASE='\mnt\chlWIS_2';
+else
+    slash = '/';
+    BASE = 'Y:\';
 end
-yeardmon = [year,'-',mon];
-BASE = '/home/thesser1/NACCS/';
-BASEA = '/mnt/CHL_WIS_1/NACCS/Production/';
-arcf = [BASEA,slash,'Figures',slash,yeardmon];
-out = [BASE,slash,yeardmon];
-arcm = [BASEA,slash,'Model',slash,yeardmon];
-if ~exist(arcm,'dir')
-    mkdir(arcm);
-end
-
+%
+BASEA = [BASE,'\NACCS\'];
+    if strcmp(storm,'blah')
+        put_file=[BASEA,slash,'Production',year,'-',mon,slash];
+        arcf = [put_file,'Figures',slash,year,'-',mon,slash];
+        arcv = [put_file,'Validation',shash,'WIS',slash,year,'-',mon,slash];
+    else
+        put_file=[BASEA,slash,'Production',slash,storm,slash];
+        arcf = [put_file,'Figures',slash,storm,slash];
+        arcv = [put_file,'Validation',slash,'WIS',storm,slash];
+    end
+%
 if ~exist(arcf,'dir')
     mkdir(arcf);
+end
+
+if ~exist(arcv,'dir')
+    mkdir(arcv);
 end
 
 loc{1} = 'level1';
 loc{2} = 'level2';
 loc{3} = 'level3N';
 loc{4} = 'level3C';
-loc{5} = 'level3S1';
-loc{6} = 'level3S2';
 
 for zz = 1:length(loc)
-    val = [out,slash,loc{zz},slash,'Validation',slash];
-    arcv = [BASEA,slash,'Validation',slash,'WIS',slash,yeardmon, ...
-        slash,loc{zz},slash];
-    arcfl = [arcf,slash,loc{zz},slash];
-    arcml = [arcm,slash,loc{zz},slash];
-    if ~exist(arcv,'dir')
-        mkdir(arcv);
+     if strcmp(storm,'blah')
+       arcf1 = [arcf,loc{zz},slash];
+       arcv1 = [arcv,loc{zz},slash];
+     else
+       arcf1 = [arcv,loc{zz},slash];
+       arcv1 = [arcv,loc{zz},slash];
+     end
+    if ~exist(arcv1,'dir')
+        mkdir(arcv1);
     end
     if ~exist(arcfl,'dir')
         mkdir(arcfl);
     end
-    if ~exist(arcml,'dir')
-        mkdir(arcml);
-    end
     if isunix
-   	%system(['cp ',out,slash,loc{zz},slash,'*.tgz ',arcml]);
-    	system(['cp ',out,slash,loc{zz},slash,'*.png ',arcfl]);
-    	system(['cp ',val,slash,'* ',arcv])
+        system(['cp ',outfile,slash,loc{zz},slash,'*.png ',arcfl]);
+        bb = dir([arcv1,'*.png']);
+        if ~isempty(bb)
+          system(['cp ',outfile,slash,'Validation',loc{zz},slash,'*.png ',arcvl]);
+        end
     else
-	%copyfile([out,slash,loc{zz},slash,'*.tgz'],arcml);
-	copyfile([out,slash,loc{zz},slash,'*.png'],arcfl);
-	copyfile([val,slash,'*'],arcv);
-    end	
+        copyfile([outfile,slash,loc{zz},slash,'*.png'],arcfl);
+        bb = dir([arcv1,'*.png']);
+        if ~isempty(bb)
+        copyfile([outfile,slash,'Validation',loc{zz},slash,'*.png'],arcvl);
+        end
+    end
 end
