@@ -12,7 +12,7 @@ mon = p.Results.mon;
 storm = p.Results.storm;
 
 
-post_file = ['Pacific/Eval_2014/WIS_PAC/Model/',year,'-',mon,'/'];
+post_file = ['Pacific/Production_2014/Model/',year,'-',mon,'/'];
 
 if ispc
     get_file = ['Y:\',post_file];
@@ -40,7 +40,9 @@ for zz = 1:length(loc)
         mkdir(floc);
     end
     cd (floc)
-    copyfile([get_file,loc{zz},slash,'*.tgz'],'.');
+    fprintf(1,'Moving files for level: %s\n',loc{zz})
+    copyfile([get_file,loc{zz},slash,'*MMf.tgz'],'.');
+    copyfile([get_file,loc{zz},slash,'*buoy_points.tgz'],'.');
     wis_read('PAC','/',0,'year',year,'mon',mon)
     
 end

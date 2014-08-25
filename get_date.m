@@ -1,15 +1,15 @@
 function [date,res,type] = get_date
 
-files1 = dir('*field.tgz');
+files1 = dir('*MMf.tgz');
 if size(files1,1) ~= 0
     untar(files1.name);
-    h5 = dir('wis*.h5');
-    datetime = double(h5read(h5.name,'/datetime'));
+    nc = dir('wis*.nc');
+    datetime = double(ncread(nc.name,'/datetime'));
     date = [datetime(1,1) datetime(2,1) datetime(3,1) datetime(1,end) ...
         datetime(2,end) datetime(3,end)];
-    lon = double(h5read(h5.name,'/longitude'));
+    lon = double(ncread(nc.name,'/longitude'));
     res = lon(2) - lon(1);
-    type = '*.h5';
+    type = '*.nc';
 else
     
     %finds name of MMt.tgz file

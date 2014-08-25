@@ -43,9 +43,10 @@ level = bbop(ii(end)+1:end);
 
 % call contour plot of max mean
 %
+fprintf(1,'Creating contours\n')
 % -------------------------------------------------------------------
-if strcmp(type,'*.h5')
-    wis_cont_h5(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
+if strcmp(type,'*.nc')
+    wis_cont_nc(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
 else
     wis_cont(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
 end
@@ -78,7 +79,7 @@ if size(file,1) == 0
     return
 end
 untar(file.name)
-fname = dir('ST*.h5');
+fname = dir('ST*.nc');
 if size(fname,1) == 0
     fname = dir('*.onlns');
 end
@@ -101,6 +102,7 @@ else
     end
 end
 
+fprintf(1,'Running point source validation\n')
 % identify validation data sets 
 nn = 0;
 locb = zeros(size(compend));
@@ -139,8 +141,8 @@ for zz = 1:length(stations)
         buoycw = buoyc;
     end
     % load in model results for buoy
-    if strcmp(type,'*.h5')
-        wis = read_WIS_h5_stat(['ST',buoycw,'.h5']);
+    if strcmp(type,'*.nc')
+        wis = read_WIS_nc_stat(['ST',buoycw,'.nc']);
     else
         wis = read_WIS_onlns(['ST',buoycw,'.onlns']);
     end
