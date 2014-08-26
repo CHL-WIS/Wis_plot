@@ -142,7 +142,7 @@ for zz = 1:length(stations)
     end
     % load in model results for buoy
     if strcmp(type,'*.nc')
-        wis = read_WIS_nc_stat(['ST',buoycw,'.nc']);
+        wis = read_WIS_nc_stat(['ST',buoycw,'_',year,'_',mon,'.nc']);
     else
         wis = read_WIS_onlns(['ST',buoycw,'.onlns']);
     end

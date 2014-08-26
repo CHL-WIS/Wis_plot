@@ -4,13 +4,15 @@ if fid == -1
     fflag = 0;aa = 0;
     return
 end
-tt = double(ncread(fname,'/datetime')');
-aa.timec = intdate_2_strdate(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
-aa.time = datenum(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
+%tt = double(ncread(fname,'/datetime')');
+%aa.timec = intdate_2_strdate(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
+%aa.time = datenum(tt(:,1),tt(:,2),tt(:,3),tt(:,4),tt(:,5),tt(:,6));
+tt = double(ncread(fname,'/time'));
+aa.time = tt/3600./24. + datenum(1970,01,01,0,0,0);
 
 aa.stat = str2double(ncreadatt(fname,'/','station'));
-aa.lat = double(ncreadatt(fname,'/','latitude'));
-aa.lon = double(ncreadatt(fname,'/','longitude'));
+aa.lat = double(ncreadatt(fname,'/','geospatial_lat'));
+aa.lon = double(ncreadatt(fname,'/','geospatial_lon'));
 aa.wndspd = double(ncread(fname,'/wndspd'));
 aa.wnddir = double(ncread(fname,'/wnddir'));
 aa.ustar = double(ncread(fname,'/ustar'));
