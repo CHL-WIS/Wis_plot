@@ -40,16 +40,11 @@ for zz = 1:length(loc)
         mkdir(floc);
     end
     cd (floc)
-<<<<<<< HEAD
-    copyfile([get_file,loc{zz},slash,'*.tgz'],'.');
-    wis_read('PAC',slash,0,'year',year,'mon',mon)
-=======
     fprintf(1,'Moving files for level: %s\n',loc{zz})
     copyfile([get_file,loc{zz},slash,'*MMf.tgz'],'.');
     copyfile([get_file,loc{zz},slash,'*buoy_points.tgz'],'.');
-    wis_read('PAC','/',0,'year',year,'mon',mon)
->>>>>>> 658e4d5dd7ac9ab5c18fb0b7d2f4f3d8c8cc8f75
-    
+    wis_read('PAC',slash,0,'year',year,'mon',mon)
+
 end
 %archive_pac(year,mon);
 %system(['rm -rf ',outfile]);
