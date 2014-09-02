@@ -4,7 +4,7 @@
 title1 = ['NACCS Study [OWI Winds]'];
 plotloc = 'G:\CDRIVE\Program Files\MATLAB\My_Matlab\Wis_plot\NACCS-SANDY\';
 rdir = 'X:\';  % Top level location of WIS raid
-localdir='H:\NACCS-SANDY\Production\outdat\';  % Local directory of files
+localdir='E:\NACCS-SANDY\Production\outdat\';  % Local directory of files
 bdir = 'X:\NACCS\Buoy_Locs\'; % Location for buoy_locs
 modelnm = 'WAMCY451C';  % Model information
 gridid = 'level';  % Indentifier of subgrids i.e. LEVEL/level/nest/grid
