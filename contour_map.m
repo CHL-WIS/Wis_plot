@@ -22,7 +22,7 @@ m_proj(project_in,'long',[xlonw xlone],'lat',[xlats xlatn]);
 hold on
 caxis([0,RANGMM]);
 set(hh,'EdgeColor','none');
-m_gshhs_i('patch',[.0 .5 .0],'edgecolor','y');
+m_gshhs_i('patch',[.0 .5 .0],'edgecolor','k');
 xlabel('Longitude','FontWeight','bold')
 ylabel('Latitude','FontWeight','bold')
 m_grid('box','fancy','tickdir','in','FontWeight','Bold');

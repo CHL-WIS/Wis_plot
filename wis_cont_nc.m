@@ -29,7 +29,7 @@ ii = strfind(track,'-');
 ip = ii(end);
 load([plotloc,bas,'-',track(ip+1:end),'.mat']);
 
-varname = {'wavhs';'wavhs_wndsea';'wavhs_swell1';'wndspd'};
+varname = {'wavehs';'wavehs_wndsea';'wavehs_swell1';'windspd'};
 type = {'max';'mean'};
 typelong = {'Maximum';'Mean'};
 varlongname = {'Height H_{mo}';'Height H_{mo}';'Height H_{mo}'; ...
@@ -187,7 +187,7 @@ for qq = 1:length(varname)
      set(f,'papersize',figpos(3:4));
      set(f,'PaperPosition',figpos);
      set(f,'PaperPositionMode','manual');
-    print(f,'-dpng','-r0','-painters',fileout1);
+     print(f,'-dpng','-r0','-painters',fileout1);
     close(f);clear f
     end
 end

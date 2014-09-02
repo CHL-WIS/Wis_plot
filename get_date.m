@@ -3,7 +3,7 @@ function [date,res,type] = get_date
 files1 = dir('*MMf.tgz');
 if size(files1,1) ~= 0
     untar(files1.name);
-    nc = dir('wis*.nc');
+    nc = dir('wis*max_mean.nc');
     datetime = double(ncread(nc.name,'/datetime'));
     date = [datetime(1,1) datetime(2,1) datetime(3,1) datetime(1,end) ...
         datetime(2,end) datetime(3,end)];

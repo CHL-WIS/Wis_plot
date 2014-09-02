@@ -3,7 +3,7 @@ function data = read_wis_nc_var(var)
 vars = ['/',var];
 tarname = dir('*MMf.tgz');
 untar(tarname.name)
-nc = dir('*.nc');
+nc = dir('*max_mean.nc');
 data.lon = double(ncread(nc.name,'/longitude'));
 data.lat = double(ncread(nc.name,'/latitude'));
 data.max = double(ncread(nc.name,[var,'_','max']))';
