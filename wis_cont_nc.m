@@ -79,7 +79,7 @@ for qq = 1:length(varname)
         
         [CMCF,hh]=m_contourf(data.lon,data.lat,data.(type{jtype}),v);
         hold on
-        caxis([0,RANGMM]);
+        caxis([-1,RANGMM]);
         set(hh,'EdgeColor','none');
         m_gshhs_i('patch',[.0 .5 .0],'edgecolor','y');
         xlabel('Longitude','FontWeight','bold')

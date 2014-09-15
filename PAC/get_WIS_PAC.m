@@ -46,6 +46,6 @@ for zz = 1:length(loc)
     wis_read('PAC',slash,0,'year',year,'mon',mon)
 
 end
-%archive_pac(year,mon);
+archive_pac(year,mon);
 %system(['rm -rf ',outfile]);
 end
