@@ -6,8 +6,8 @@ else
     slash = '\';
 end
 yeardmon = [year,'-',mon];
-BASE = '/home/thesser1/Pacific/Model/';
-BASEA = '/mnt/CHL_WIS_2/Pacific/Eval_2014/';
+BASE = '/home/thesser1/Pacific/Production_2014/';
+BASEA = '/mnt/CHL_WIS_2/Pacific/Production_2014/';
 arcf = [BASEA,slash,'Figures',slash,yeardmon];
 out = [BASE,slash,yeardmon];
 arcm = [BASEA,slash,'Model',slash,yeardmon];

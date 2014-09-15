@@ -46,6 +46,9 @@ for zz = 1:length(loc)
     wis_read('PAC',slash,0,'year',year,'mon',mon)
 
 end
-%archive_pac(year,mon);
+archive_pac(year,mon);
+for zz = 1:length(loc)
+    move_2_thredds(year,mon,'Pacific',[get_file,loc{jj}])
+end
 %system(['rm -rf ',outfile]);
 end

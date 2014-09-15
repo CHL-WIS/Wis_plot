@@ -184,7 +184,7 @@ for zz = 1:size(compend,1)
         compplot_data(zz,stations,data,compc(zz,:),tit2,track,saven,fillm)
     end
 end
-delete *.onlns
+delete *.onlns *.nc
 close all
 
 %% -----------------------------------------------------------------
