@@ -65,6 +65,7 @@ for qq = 1:length(varname)
         RANGMM = max(max(data.(type{jtype})));
         disp([titlefld1,'  ',num2str(RANGMM)]);
         interv=0.005*RANGMM;
+        %interv=RANGMM/62;
         v=[-1,0:interv:RANGMM];
         
         
@@ -72,7 +73,7 @@ for qq = 1:length(varname)
         [imax jmax] = find(data.(type{jtype}) == RANGMM);
         
         load cmap.mat
-        f = figure('visible','off');
+        f = figure('visible','on');
         colormap(cmap)
         m_proj(project_in,'long',[min(data.lon) max(data.lon)], ...
             'lat',[min(data.lat) max(data.lat)]);

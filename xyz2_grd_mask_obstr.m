@@ -16,20 +16,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Initialization
-fnamein = 'ATL_level1_30m';     %Name of file (omit extension .xyz)
-fnameout = 'ATL_L1_30m';           %Prefix name for output files
-out_dir = './';                     %Location for output files
+in_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/basin/';
+fnamein = 'atlantic_level1_5d';     %Name of file (omit extension .xyz)
+fnameout = 'atl_basin_l1_5d';           %Prefix name for output files
+out_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/basin/';          %Location for output files
 depth_scale = 1000;                 %Scale for .grd depth file
 obstr_scale = 100;                  %Scale for .obstr file
+grid_res = 0.5*3600;
 
 ref_dir = '/home/thesser1/My_Matlab/gridgen/reference_data/';     %Location of boundary files
 boundary = 'full';                  %Boundary resolution wanted
 
 % Input .xyz and convert to lat/lon/depth variables
-[lat,lon,depth] = xyz2grd(load([fnamein,'.xyz']));
-if lon <=0
-    lon = lon + 360;
-end
+[lat,lon,depth] = xyz2grd(load([in_dir,fnamein,'.xyz']));
+%lon(lon <= 0) = lon(lon <= 0) + 360;
 
 % Read in boundary
 if ~exist('bound')
@@ -42,8 +42,14 @@ fprintf(1,'.........Computing Boundaries..................\n');
 coord = [lat(1)-2 lon(1)-2 lat(end)+2 lon(end)+2];
 [b,N1] = compute_boundary(coord,bound);
 
+
+tol = grid_res/3600 * 4;
+if tol <= 2.0
+    tol = 2.0;
+end
+
 fprintf(1,'.........Splitting Boundaries..................\n');
-b_split = split_boundary(b,2);
+b_split = split_boundary(b,tol);
 
 % Set up and generate cleaned mask
 m = ones(size(depth)); 
@@ -51,7 +57,7 @@ loc = depth >= 0;
 m(loc) = 0;
 
 fprintf(1,'.........Cleaning Mask..................\n');
-m2 = clean_mask(lon,lat,m,b_split,0.5);
+m2 = clean_mask(lon,lat,m,b_split,0.2);
 
 fprintf(1,'.........Separating Water Bodies..................\n');
 [m3,mask_map] = remove_lake(m2,-1,0);
