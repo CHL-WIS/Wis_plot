@@ -6,8 +6,9 @@ else
     slash = '\';
 end
 yeardmon = [year,'-',mon];
-BASE = 'H:\Pacific\Production_2014\';
-BASEA = 'Y:\Pacific\Production_2014';
+BASE = 'H:\Pacific\Production_2014';
+%BASEA = 'Y:\Pacific\Production_2014';
+BASEA = 'W:\Pacific\Production_2014';
 arcf = [BASEA,slash,'Figures',slash,yeardmon];
 out = [BASE,slash,yeardmon];
 arcm = [BASEA,slash,'Model',slash,yeardmon];
@@ -48,6 +49,9 @@ for zz = 1:length(loc)
     else
 	%copyfile([out,slash,loc{zz},slash,'*.tgz'],arcml);
 	copyfile([out,slash,loc{zz},slash,'*.png'],arcfl);
-	copyfile([val,slash,'*'],arcv);
+    valpng = dir([val,slash,'*.png']);
+    if ~isempty(valpng)
+        copyfile([val,slash,'*.png'],arcv);
+    end
     end	
 end

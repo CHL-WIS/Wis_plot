@@ -13,9 +13,9 @@ storm = p.Results.storm;
 
 
 post_file = ['Pacific/Production_2014/Model/',year,'-',mon,'/'];
-
 if ispc
-    get_file = ['Y:\',post_file];
+    %get_file = ['Y:\',post_file];
+    get_file = ['W:\',post_file];
     get_file = strrep(get_file,'/','\');
     slash = '\';
 else
