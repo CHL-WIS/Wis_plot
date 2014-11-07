@@ -47,8 +47,8 @@ for zz = 2:length(loc)
 
 end
 archive_pac(year,mon);
-for zz = 1:length(loc)
-    move_2_thredds(year,mon,'Pacific',[get_file,loc{jj}])
-end
+%for zz = 1:length(loc)
+%    move_2_thredds(year,mon,'Pacific',[get_file,loc{jj}])
+%end
 %system(['rm -rf ',outfile]);
 end
