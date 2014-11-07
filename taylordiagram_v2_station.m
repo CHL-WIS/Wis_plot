@@ -1,4 +1,4 @@
-function taylordiagram_v2_station(data,inpath,varargin)
+function sc = taylordiagram_v2_station(data,inpath,varargin)
 %,dt,modeldur)
 % TAYLORDIAGRAM_v1
 % Plot a Taylor diagram from statistics
@@ -85,8 +85,13 @@ counter=0;
 %files=dir(fullfile(inpath,'timepair*.mat'));
 f1 = fieldnames(data.buoy);
 files = flipud(f1(1:end));
+if strmatch('jan',files);
+    files = {'jan','feb','mar','apr','may','jun','jul','aug','sep','oct', ...
+        'nov','dec','total'}
+end
 folcmap = hsv(numel(files(1:end-1)));
 folcmap(end+1,1:3) = [0 0 0];
+sc = struct;
 %folcmap(2:length(folcmap2)+1,:) = folcmap2;
 for kk=1:numel(files) %Looping over *.timepair files in the directory
     tfile=files{kk};
@@ -127,6 +132,11 @@ for kk=1:numel(files) %Looping over *.timepair files in the directory
     RMSs=statm(:,3)/statm(1,2); %normalized by STD of observation
     CORs=statm(:,4);
     
+    sc.name{kk} = tfile;
+    sc.std(kk,1) = STDs(2);
+    sc.rms(kk,1) = RMSs(2);
+    sc.cor(kk,1) = CORs(2);
+    
     if find(CORs<0)
         Npan(k) = 2; % double panel
     end
@@ -158,7 +168,6 @@ end
 %     gridname{k}=strcat(simname,'_',foldat);
 %end
 %girdname{1} = 'Level1'
-
 clear dind
 
 dind=find(inpath==slash);
@@ -245,5 +254,27 @@ pp(n)=plot(rho(m,n)*cos(theta(m,n)),rho(m,n)*sin(theta(m,n)),'Marker','.','Color
 
 %ff3 = fullfile(['TaylorDiagram-',folsimname]);
 %saveas(gcf,ff3,'png');
+mval = max(max(rho));
+cval = ceil(mval);
+if mval < cval-0.5
+    cval = cval - 0.5;
+elseif mval == cval
+    cval = cval + 0.5;
+end
+ii = ~isnan(buoy) & ~isnan(model);
+bstd = std(buoy(ii));
+mstd = std(model(ii));
+bias = calc_bias(buoy(ii),model(ii));
+rmse = calc_rmse(buoy(ii),model(ii));
+wilm = calc_willmott(buoy(ii),model(ii));
+%taytext1 = ['Buoy Mean : ',sprintf('%6.2f',bmean),'-m'];
+taytext1 = ['Buoy Std =',sprintf('%6.2f',bstd),'-m'];
+%taytext3 = ['Model Mean: ',sprintf('%6.2f',mmean),'-m'];
+taytext2 = ['Model Std =',sprintf('%6.2f',mstd),'-m'];
+taytext3 = ['Bias =',sprintf('%6.2f',bias),'-m'];
+taytext4 = ['RMSE =',sprintf('%6.2f',rmse),'-m'];
+taytext5 = ['Willmott Index =',sprintf('%6.2f',wilm)];
+taytext = {taytext1;taytext2;taytext3,;taytext4;taytext5};
+text(cval,cval,taytext,'fontweight','bold','VerticalAlignment','Top')
 end
 

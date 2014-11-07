@@ -29,7 +29,7 @@ res=0.1;
 %
 %  Hardwire percentiles:
 %
-percntle=.001:.001:.999;
+percntle=.0001:.0001:.9999;
 totpercnt=length(percntle);
 %
 for kk=1:totpercnt

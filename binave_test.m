@@ -1,4 +1,4 @@
-function binave(buoy,model,varb,varargin)
+function binave_test(bb,mm,varb,varargin)
 %function binave(buoy,model,yrstrt,yrend,buoystn,varb)
 %
 %  INPUT
@@ -16,12 +16,12 @@ function binave(buoy,model,varb,varargin)
 %  ANOTATION SETTING
 %
 p = inputParser;
-p.addRequired('buoy');
-p.addRequired('model');
+p.addRequired('bb');
+p.addRequired('mm');
 p.addRequired('varb');
 p.addOptional('fplt',0);
 p.addOptional('splt',0);
-parse(p,buoy,model,varb,varargin{:});
+parse(p,bb,mm,varb,varargin{:});
 
 fplt = p.Results.fplt;
 splt = p.Results.splt;
@@ -34,6 +34,7 @@ end
 
 if varb(1:2) == 'Hs'
     varbtxt=['H_{mo} [m]'];
+    colm = 4;
 elseif varb(1:2) == 'Tp'
     varbtxt=['T_{p}  [s]'];
 elseif varb(1:2) == 'U1'
@@ -57,6 +58,15 @@ ylabtxt=['MODEL ',varbtxt];
 %   Linear regression with forced "0" intercept.
 %  Calculate the RMSE for the 95% confidence Bands
 %
+if isstruct(bb)
+    ii = bb.total(:,colm) > 0;
+    buoy = bb.total(ii,colm);
+    model = mm.total(ii,colm);
+    files = {'jan','feb','mar','apr','may','jun','jul','aug','sep','oct', ...
+        'nov','dec'};
+    folcmap = hsv(numel(files(1:end)));
+end
+
 maxval=max(max(buoy),max(model));
 tprtot=length(buoy);
 csu=sqrt(sum(model.^2) / sum(buoy.^2));
@@ -106,16 +116,27 @@ end
 %
 %  Plot Error Bars
 %
-plot(buoy,model,'g.',[0 ceil(maxval)], [0 ceil(maxval)],'b--')
-%set(gca,'xlim',[0 ceil(maxval)]);
-%set(gca,'ylim',[0 ceil(maxval)]);
+%plot(buoy,model,'g.',[0 ceil(maxval)], [0 ceil(maxval)],'b--')
+hold on
+for jj = 1:length(files)
+    ii = bb.(files{jj}).total(:,4) > 0;
+    plot(bb.(files{jj}).total(ii,4),mm.(files{jj}).total(ii,4),'.','Color',folcmap(jj,:));
+end
+plot([0 ceil(maxval)],[0 ceil(maxval)],'b--');
+box on
+set(gca,'xlim',[0 ceil(maxval)]);
+set(gca,'ylim',[0 ceil(maxval)]);
 %axes([0 0 max(xlim,ylim) max(xlim,ylim)])
 %axis('equal')
-axis('square')
+axis('square');
+pause(1)
+ytick = get(gca,'ytick');
+set(gca,'xtick',ytick);
+
 
 grid
-hold on
-errorbar(mvt,avet,stt,'ok')
+%hold on
+errorbar(mvt,avet,stt,'ok','linewidth',1.0);
 xlabel(xlabtxt,'FontWeight','Bold');
 ylabel(ylabtxt,'FontWeight','Bold');
 xpoint = get(gca,'xlim');

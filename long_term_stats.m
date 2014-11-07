@@ -1,7 +1,11 @@
 function long_term_stats(yearmon1,yearmon2,basin,model,grd,ifill)
 
 clf;close all
-
+if isunix
+    slash = '/';
+else
+    slash = '\';
+end
 %convert numeric yearmons to strings
 yearmon1c = num2str(yearmon1);
 year1 = yearmon1c(1:4);mon1 = yearmon1c(5:6);
@@ -9,19 +13,32 @@ yearmon2c = num2str(yearmon2);
 year2 = yearmon2c(1:4);mon2 = yearmon2c(5:6);
 
 mloc = ['/home/thesser1/My_Matlab/Wis_plot/',basin,'/'];
-eval(['[tit,outdir] = ',basin,'_longterm_names(year1,year2,model,grd)']);
+eval(['[tit,outdir,workdir] = ',basin,'_longterm_names(year1,year2,model,grd)']);
 
-if ~strcmp(grd,'')
-    load([mloc,basin,'-',grd,'-plot.mat']);
-    load([mloc,basin,'-',grd,'-buoy.mat']);
+load([mloc,basin,'-',grd,'-plot.mat']);
+buoyfile = [mloc,slash,basin,'-',grd,'-buoy.mat'];
+if exist(buoyfile,'file')
+    load(buoyfile);
+    stats = buoy(:,3);
+else
+    fdd = dir([workdir,slash,'Buoy_Locs',slash,grd,slash,'*.locs']);
+    for ii = 1:length(fdd)
+        stats(ii,1) = str2num(fdd(ii).name(2:6));
+    end
+end
+
+
+% if ~strcmp(grd,'')
+%     load([mloc,basin,'-',grd,'-plot.mat']);
+%     load([mloc,basin,'-',grd,'-buoy.mat']);
     outdirl = [outdir,'/',grd];
     if ~exist(outdirl,'dir')
         mkdir(outdirl);
     end
-else
-    load([mloc,basin,'-plot.mat']);
-    load([mloc,basin,'-buoy.mat']);
-end
+% else
+%     load([mloc,basin,'-plot.mat']);
+%     load([mloc,basin,'-buoy.mat']);
+% end
 
 stype = {'bx-';'ro-';'g+-';'k*-.';'md-';'cs-'};
 itype = {'Bias';'RMSE';'SI'};
@@ -42,17 +59,23 @@ for jj = 1:size(compend,1)
     for zz = 1:size(compend,2)
         eval(['aa{jj,zz} = conc_',basin,'_eval(num2str(compend(jj,zz)),model,grd,yeard,mon1,mon2);']);
         if isstruct(aa{jj,zz})
-            ii = buoy(:,3) == compend(jj,zz);
-            if isempty(buoy(ii,1))
+            ii = stats == compend(jj,zz);
+            if isempty(stats(ii,1))
                 continue
             end
             nn = nn + 1;
             tim1(nn) = min(aa{jj,zz}.timest);
             tim2(nn) = max(aa{jj,zz}.timest);
             
-            lon(nn) = buoy(ii,1);
-            lat(nn) = buoy(ii,2);
-            bname{nn} = num2str(compend(jj,zz));
+            if size(stats,2) == 1
+                ff = load(fullfile(workdir,'Buoy_Locs',grd,['n',num2str(compend(jj,zz)),'.locs']));
+                lon(nn) = ff(1,1);
+                lat(nn) = ff(1,2);
+            else
+                lon(nn) = buoy(ii,1);
+                lat(nn) = buoy(ii,2);
+            end
+                bname{nn} = num2str(compend(jj,zz));
 
             for rr = 1:3
                 bb(rr) = figure(rr);

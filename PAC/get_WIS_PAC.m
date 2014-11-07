@@ -34,7 +34,7 @@ loc{4} = ['cali_l4'];
 loc{5} = ['hawaii_l2'];
 loc{6} = ['hawaii_l3'];
 
-for zz = 1:length(loc)
+for zz = 2:length(loc)
     floc = [outfile,'/',loc{zz}];
     if ~exist(floc,'dir')
         mkdir(floc);

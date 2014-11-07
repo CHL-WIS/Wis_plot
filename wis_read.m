@@ -46,7 +46,7 @@ level = bbop(ii(end)+1:end);
 fprintf(1,'Creating contours\n')
 % -------------------------------------------------------------------
 if strcmp(type,'*.nc')
-    wis_cont_nc(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
+  %  wis_cont_nc(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
 else
     wis_cont(track,modelnm,plotloc,bas,'trackp',1,'iceC',iceC)
 end
@@ -137,6 +137,7 @@ for zz = 1:length(stations)
             - ab(:,ilat));
         [vv, idx] = min(sqrt(vv1.^2 + vv2.^2));
         buoycw = num2str(ab(idx,ibou));
+       
     else
         buoycw = buoyc;
     end

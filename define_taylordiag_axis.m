@@ -41,6 +41,9 @@ if foundrmax==0
 else
     maxrho = rmax;
 end
+if maxrho == fix(maxrho)
+    maxrho = maxrho + 0.01;
+end
 hhh = line([-maxrho -maxrho maxrho maxrho],[-maxrho maxrho maxrho -maxrho],'parent',cax);
 set(cax,'dataaspectratio',[1 1 1],'plotboxaspectratiomode','auto')
 v = [get(cax,'xlim') get(cax,'ylim')];

@@ -1,20 +1,20 @@
 function aa = conc_PAC_eval(buoy,model,level,yeard,mon1,mon2)
 %cc = 'X:\Atlantic\Evaluation\WW3\Validation\WIS\';
 %cc = 'X:\Pacific\Production\Validation\WIS';
-cc = '/mnt/CHL_WIS_1/Pacific/Production/Validation/WIS/';
+cc = '/mnt/CHL_WIS_2/Pacific/Production_2014/Validation/WIS/';
 yearc = num2str(yeard(1));
 %yearmon = '2006-12';
 yearmon1 = [yearc,'-',mon1];
 if str2num(mon1) >= 10
     yearmon = [yearc,'_',mon1];
 else
-    yearmon = [yearc,mon1];
+    yearmon = [yearc,'_',mon1];
 end
 %dirname = [cc,yearmon,'\',level];
-dirname = [cc,'\',yearmon1,'\'];
+dirname = fullfile(cc,yearmon1);
 lev = level(6:end);
 %fname = [dirname,'\timepair-ATL-',buoy,'-',level,'.mat'];
-fname = [dirname,'Pac','-',buoy,'-',yearmon,'.mat'];
+fname = fullfile(dirname,level,['timepair-PAC-',yearmon1,'-',strrep(level,'_','-'),'-',buoy,'.mat']);
 if exist(fname,'file')
     load(fname);
     aabuoy = AB;
@@ -63,8 +63,10 @@ for jj = yeard(2):yeard(end)
         else
             yearmon = [yearc,monc];
         end
-        dirname = [cc,'/',yearmon1,'/'];
-        fname = [dirname,'Pac','-',buoy,'-',yearmon,'.mat'];
+        dirname = fullfile(cc,yearmon1);
+        fname = fullfile(dirname,level,['timepair-PAC-',yearmon1,'-',strrep(level,'_','-'),'-',buoy,'.mat']);
+
+        %fname = [dirname,'Pac','-',buoy,'-',yearmon,'.mat'];
         if exist(fname,'file')
             load(fname);
             if isempty(AB)

@@ -1,4 +1,4 @@
-function QQ_plot(buoy,model,varb,varargin)
+function H = QQ_plot(buoy,model,varb,varargin)
 %
 %  INPUT
 %
@@ -20,10 +20,14 @@ p.addRequired('model');
 p.addRequired('varb');
 p.addOptional('fplt',0);
 p.addOptional('splt',0);
+p.addOptional('color','r');
+p.addOptional('symbol','+');
 parse(p,buoy,model,varb,varargin{:});
 
 fplt = p.Results.fplt;
 splt = p.Results.splt;
+color1 = p.Results.color;
+symb = p.Results.symbol;
 
 if fplt > 0
     figure(fplt)
@@ -56,16 +60,22 @@ ylabtxt=['MODEL ',varbtxt];
 [qqB,qqM] = QQ_proc_extr(buoy,model);
 maxval=ceil(max(max(qqB(end)),max(qqM(end))));
 %
-orient('tall')
+%orient('tall')
 %
-H=plot(qqB(1:end),qqM(1:end),'r+',[0 maxval],[0 maxval],'b');
+plot([0 maxval],[0 maxval],'b');
+hold on
+H=plot(qqB(1:end),qqM(1:end),symb,'Color',color1,'markersize',8);
+
 %H=plot(qqB(1:96),qqM(1:96),'r+',qqB(97:end),qqM(97:end),'bo',[0 maxval],[0 maxval],'b');
 %H=plot(qqB(1:990),qqM(1:990),'r+',qqB(991:end),qqM(991:end),'bo',[0 maxval],[0 maxval],'b');
 grid
-axis([0,maxval,0,maxval]);
+axis([0,maxval+1,0,maxval+1]);
 axis('square');
 xlabel(xlabtxt,'FontWeight','Bold');
 ylabel(ylabtxt,'FontWeight','Bold');
+ytick = get(gca,'ytick');
+set(gca,'xtick',ytick);
+box on
 %title(titlT,'FontWeight','Bold');
 %legend(H,' 0.1- to 99.0-percentile','99.1- to 99.9-percentile','Location','SouthEast')
 %eval(['print -dpng -r600 QQPLOT_ALL_',buoystn,'_',varb]); 

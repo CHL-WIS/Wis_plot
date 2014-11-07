@@ -16,20 +16,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Initialization
-in_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/basin/';
-fnamein = 'atlantic_level1_5d';     %Name of file (omit extension .xyz)
-fnameout = 'atl_basin_l1_5d';           %Prefix name for output files
-out_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/basin/';          %Location for output files
+in_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/florida/';
+fnamein = 'atlantic_level3S2';     %Name of file (omit extension .xyz)
+fnameout = 'atl_florida_l3_5m';           %Prefix name for output files
+out_dir = '/home/thesser1/ATL/WIS_ATL/inputfiles/grids/florida/';          %Location for output files
 depth_scale = 1000;                 %Scale for .grd depth file
 obstr_scale = 100;                  %Scale for .obstr file
-grid_res = 0.5*3600;
+grid_res = 5*60;
 
 ref_dir = '/home/thesser1/My_Matlab/gridgen/reference_data/';     %Location of boundary files
 boundary = 'full';                  %Boundary resolution wanted
 
 % Input .xyz and convert to lat/lon/depth variables
 [lat,lon,depth] = xyz2grd(load([in_dir,fnamein,'.xyz']));
-%lon(lon <= 0) = lon(lon <= 0) + 360;
+lon(lon <= 0) = lon(lon <= 0) + 360;
 
 % Read in boundary
 if ~exist('bound')

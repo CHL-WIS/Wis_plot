@@ -24,15 +24,16 @@ for jj = 1:99999
     udir(jj,1) = data{2};
     ustar(jj,1) = data{3};
 
-    data = textscan(fid,'%f%f%f%f%f%f%f',1);
+    data = textscan(fid,'%f%f%f%f%f%f%f%f',1);
     hs(jj,1) = data{1};
-    tp(jj,1) = 0;%data{2};
-    tpp(jj,1) = data{2};
-    tm(jj,1) = data{3};
-    tm1(jj,1) = data{4};
-    tm2(jj,1) = data{5};
-    wdir(jj,1) = data{6};
-    wspr(jj,1) = data{7};
+    %tp(jj,1) = 0;
+    tp(jj,1) = data{2};
+    tpp(jj,1) = data{3};
+    tm(jj,1) = data{4};
+    tm1(jj,1) = data{5};
+    tm2(jj,1) = data{6};
+    wdir(jj,1) = data{7};
+    wspr(jj,1) = data{8};
 % changed number from 8 to 7 and reorderd output  07/23/2013 TJ Hesser
     for ii = 1:nf
         data = fscanf(fid,'%f',1);
